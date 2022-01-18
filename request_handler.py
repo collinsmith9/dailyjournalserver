@@ -1,7 +1,7 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from views import get_all_entries, get_single_entry
+from views import get_all_entries, get_single_entry, delete_entry
 
 
 
@@ -191,8 +191,8 @@ class HandleRequests(BaseHTTPRequestHandler):
         (resource, id) = self.parse_url(self.path)
 
     # Delete a single animal from the list
-        if resource == "animals":
-            delete_animal(id)
+        if resource == "entries":
+            delete_entry(id)
         elif resource == "locations":
             delete_location(id)
         elif resource == "employees":
