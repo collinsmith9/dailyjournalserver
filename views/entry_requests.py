@@ -146,3 +146,30 @@ def create_journal_entry(new_entry):
 
 
     return json.dumps(new_entry)
+
+def update_entry(id, updated_entry):
+    with sqlite3.connect("./dailyjournal.sqlite3") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        UPDATE Entries
+            SET
+                concept = ?,
+                entry = ?,
+                mood_id = ?,
+                date = ?
+        WHERE id = ?
+        """, (updated_entry['concept'], updated_entry['entry'],
+              updated_entry['mood_id'], updated_entry['date'], id, ))
+
+        # Were any rows affected?
+        # Did the client send an `id` that exists?
+        rows_affected = db_cursor.rowcount
+
+    if rows_affected == 0:
+        # Forces 404 response by main module
+        return False
+    else:
+        # Forces 204 response by main module
+        return True
+
