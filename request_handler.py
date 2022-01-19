@@ -1,7 +1,7 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from views import get_all_entries, get_single_entry, delete_entry
+from views import get_all_entries, get_single_entry, delete_entry, get_entry_by_search
 
 
 
@@ -117,8 +117,8 @@ class HandleRequests(BaseHTTPRequestHandler):
             # Is the resource `customers` and was there a
             # query parameter that specified the customer
             # email as a filtering value?
-            if key == "email" and resource == "customers":
-                response = get_customers_by_email(value)
+            if key == "q" and resource == "entries":
+                response = get_entry_by_search(value)
             elif key == "location_id" and resource == "animals":
                 response = get_animal_by_location(int(value))
             elif key == "status" and resource == "animals":

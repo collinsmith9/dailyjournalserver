@@ -22,3 +22,5 @@ INSERT INTO `Moods` VALUES (null, 'Ok');
 
 INSERT INTO `Entries` VALUES (null, "Python", "this is a test", 1, "today");
 INSERT INTO `Entries` VALUES (null, "Back-end Dev", "this stuff is pretty cool", 1, "always");
+
+
