@@ -121,3 +121,28 @@ def get_entry_by_search(search_term):
     #json.dumps needs whatever is passed to be a dictionary
     # Use `json` package to properly serialize list as JSON
     return json.dumps(entries)
+
+def create_journal_entry(new_entry):
+    with sqlite3.connect("./dailyjournal.sqlite3") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        INSERT INTO Entries
+            ( concept, entry, mood_id, date )
+        VALUES
+            ( ?, ?, ?, ? );
+        """, (new_entry['concept'], new_entry['entry'],
+              new_entry['mood_id'], new_entry['date']))
+
+        # The `lastrowid` property on the cursor will return
+        # the primary key of the last thing that got added to
+        # the database.
+        id = db_cursor.lastrowid
+
+        # Add the `id` property to the animal dictionary that
+        # was sent by the client so that the client sees the
+        # primary key in the response.
+        new_entry['id'] = id
+
+
+    return json.dumps(new_entry)
