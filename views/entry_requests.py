@@ -1,6 +1,6 @@
 import sqlite3
 import json
-from models import Entry
+from models import Entry, Mood
 
 def get_all_entries():
     with sqlite3.connect("./dailyjournal.sqlite3") as conn:
@@ -16,8 +16,11 @@ def get_all_entries():
             e.concept,
             e.entry,
             e.mood_id,
-            e.date
+            e.date,
+            m.label mood_label
         FROM Entries e
+        JOIN Moods m
+            ON m.id = e.mood_id
         """)
 
         # Initialize an empty list to hold all animal representations
@@ -34,6 +37,8 @@ def get_all_entries():
             # exact order of the parameters defined in the
             # Animal class above.
             entry = Entry(row['id'], row['concept'], row['entry'], row['mood_id'], row['date'])
+            mood = Mood(row['mood_id'], row['mood_label'])
+            entry.mood = mood.__dict__
 
             entries.append(entry.__dict__) #python __ is dunder
     #json.dumps needs whatever is passed to be a dictionary
@@ -53,8 +58,11 @@ def get_single_entry(id):
             e.concept,
             e.entry,
             e.mood_id,
-            e.date
+            e.date,
+            m.label mood_label
         FROM Entries e
+        JOIN Moods m
+            ON m.id = e.mood_id
         WHERE e.id = ?
         """, ( id, ))
 
@@ -63,6 +71,8 @@ def get_single_entry(id):
 
         # Create an animal instance from the current row
         entry = Entry(data['id'], data['concept'], data['entry'], data['mood_id'], data['date'])
+        mood = Mood(data['mood_id'], data['mood_label'])
+        entry.mood = mood.__dict__
 
         return json.dumps(entry.__dict__)
 
